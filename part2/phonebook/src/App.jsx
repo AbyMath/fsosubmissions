@@ -13,77 +13,101 @@ const App = () => {
   const [notification, setNotification] = useState(null)
 
   useEffect(() => {
-    personService.getAll().then(data => {
-      setPersons(data)
-    })
+    personService.getAll().then(setPersons)
   }, [])
 
   const showNotification = (message, type = 'success') => {
     setNotification({ message, type })
-    setTimeout(() => {
-      setNotification(null)
-    }, 5000)
+    setTimeout(() => setNotification(null), 5000)
   }
 
   const addPerson = (event) => {
     event.preventDefault()
 
-    const existingPerson = persons.find(person => person.name === newName)
+    const existingPerson = persons.find(p => p.name === newName)
 
     if (existingPerson) {
       const confirmUpdate = window.confirm(
         `${newName} is already added to phonebook, replace the old number with a new one?`
       )
+
       if (confirmUpdate) {
-        const updatedPerson = { ...existingPerson, number: newNumber }
-        personService.update(existingPerson.id, updatedPerson)
-          .then(data => {
-            setPersons(persons.map(p => p.id !== existingPerson.id ? p : data))
-            showNotification(`Updated ${newName}'s number`, 'success')
+        personService.update(existingPerson.id, {
+          ...existingPerson,
+          number: newNumber
+        })
+          .then(updated => {
+            setPersons(prev =>
+              prev.map(p => p.id === existingPerson.id ? updated : p)
+            )
+            showNotification(`Updated ${newName}`, 'success')
             setNewName('')
             setNewNumber('')
           })
           .catch(error => {
-            showNotification(`Information of ${newName} has already been removed from server`, 'error')
-            setPersons(persons.filter(p => p.id !== existingPerson.id))
+            const data = error.response?.data
+
+            const message =
+              (typeof data === 'string'
+                ? data
+                : data?.error) ||
+              error.message ||
+              'Update failed'
+
+            showNotification(message, 'error')
           })
       }
       return
     }
 
-    const personObject = {
+    personService.create({
       name: newName,
       number: newNumber
-    }
-
-    personService.create(personObject)
-      .then(data => {
-        setPersons(persons.concat(data))
+    })
+      .then(created => {
+        setPersons(prev => prev.concat(created))
         showNotification(`Added ${newName}`, 'success')
         setNewName('')
         setNewNumber('')
       })
       .catch(error => {
-        showNotification('Failed to add person', 'error')
+        const data = error.response?.data
+
+        const message =
+          (typeof data === 'string'
+            ? data
+            : data?.error) ||
+          error.message ||
+          'Failed to add person'
+
+        showNotification(message, 'error')
       })
   }
 
   const deletePerson = (id, name) => {
-    const confirmDelete = window.confirm(`Delete ${name}?`)
-    if (confirmDelete) {
-      personService.remove(id)
-        .then(() => {
-          setPersons(persons.filter(p => p.id !== id))
-          showNotification(`Deleted ${name}`, 'success')
-        })
-        .catch(error => {
-          showNotification(`Failed to delete ${name}`, 'error')
-        })
-    }
+    if (!window.confirm(`Delete ${name}?`)) return
+
+    personService.remove(id)
+      .then(() => {
+        setPersons(prev => prev.filter(p => p.id !== id))
+        showNotification(`Deleted ${name}`, 'success')
+      })
+      .catch(error => {
+        const data = error.response?.data
+
+        const message =
+          (typeof data === 'string'
+            ? data
+            : data?.error) ||
+          error.message ||
+          'Delete failed'
+
+        showNotification(message, 'error')
+      })
   }
 
-  const filteredPersons = persons.filter(person =>
-    person.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPersons = persons.filter(p =>
+    p.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   return (
