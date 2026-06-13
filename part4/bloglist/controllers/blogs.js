@@ -54,11 +54,17 @@ const create = async (request, response) => {
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
 
-  response.status(201).json(savedBlog)
+  const populatedBlog = await Blog.findById(savedBlog._id)
+    .populate('user', {
+      username: 1,
+      name: 1,
+    })
+
+  response.status(201).json(populatedBlog)
 }
 
 const update = async (request, response) => {
-  const { title, author, url, likes } = request.body
+  const { title, author, url, likes, user } = request.body
 
   const blog = await Blog.findByIdAndUpdate(
     request.params.id,
@@ -67,12 +73,16 @@ const update = async (request, response) => {
       author,
       url,
       likes,
+      user,
     },
     {
-      new: true,
+      returnDocument: 'after',
       runValidators: true,
     }
-  )
+  ).populate('user', {
+    username: 1,
+    name: 1,
+  })
 
   if (!blog) {
     return response.status(404).json({

@@ -9,7 +9,7 @@ const blogSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
-})
+}, { versionKey: false })
 
 blogSchema.set('toJSON', {
   transform: (document, returnedObject) => {

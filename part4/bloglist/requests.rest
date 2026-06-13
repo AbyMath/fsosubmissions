@@ -2,23 +2,62 @@ GET http://localhost:3003/api/blogs
 
 ###
 
-POST http://localhost:3003/api/login
+GET http://localhost:3003/api/blogs/:id
+
+###
+
+POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "username": "adam",
-  "password": "secret123"
+  "title": "Test blog",
+  "author": "Test author",
+  "url": "http://test.com",
+  "likes": 0
 }
 
 ###
 
-DELETE http://localhost:3003/api/blogs/PASTE_BLOG_ID
-Authorization: Bearer PASTE_TOKEN
+PUT http://localhost:3003/api/blogs/:id
+Content-Type: application/json
+
+{
+  "title": "Updated title",
+  "author": "Test author",
+  "url": "http://test.com",
+  "likes": 5
+}
 
 ###
 
-DELETE http://localhost:3003/api/blogs/PASTE_BLOG_ID
+DELETE http://localhost:3003/api/blogs/:id
+Authorization: Bearer YOUR_TOKEN_HERE
 
 ###
 
-GET http://localhost:3003/api/blogs
+GET http://localhost:3003/api/users
+
+###
+
+GET http://localhost:3003/api/users/:id
+
+###
+
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "name": "Test User",
+  "password": "password123"
+}
+
+###
+
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "password123"
+}
