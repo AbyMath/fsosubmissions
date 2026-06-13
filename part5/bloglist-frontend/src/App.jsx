@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { Routes, Route, Link, Navigate, useNavigate, useMatch } from 'react-router-dom'
 
+import Users from './components/Users'
+import User from './components/User'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
@@ -8,6 +10,7 @@ import Notification from './components/Notification'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
+import userService from './services/users'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -15,6 +18,8 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [notification, setNotification] = useState(null)
+  const [users, setUsers] = useState([])
+  const [comment, setComment] = useState('')
 
   const navigate = useNavigate()
 
@@ -35,6 +40,12 @@ const App = () => {
     blogService.getAll().then(data => {
       setBlogs(sortBlogs(data))
     })
+  }, [])
+
+  useEffect(() => {
+  userService.getAll().then(data => {
+    setUsers(data)
+  })
   }, [])
 
   const notify = (message, type) => {
@@ -125,6 +136,21 @@ const handleAddBlog = async (blogObject) => {
     )
   }
 
+  const handleComment = async (blog) => {
+  const returned = await blogService.addComment(
+    blog.id,
+    comment
+  )
+
+  setBlogs(prev =>
+    prev.map(b =>
+      b.id === blog.id ? returned : b
+    )
+  )
+
+  setComment('')
+}
+
   const handleDeleteBlog = async (blog) => {
     if (
       window.confirm(
@@ -145,13 +171,21 @@ const handleAddBlog = async (blogObject) => {
   const selectedBlog = match
   ? blogs.find(blog => blog.id === match.params.id)
   : null
+  
+  const userMatch = useMatch('/users/:id')
+  const selectedUser = userMatch
+  ? users.find(user => user.id === userMatch.params.id)
+  : null
 
   return (
     <div>
       <Notification notification={notification} />
 
       <div style={{ marginBottom: '20px' }}>
+  
   <Link to="/">blogs</Link>
+  {' | '}
+  <Link to="/users">users</Link>
 
   {user && (
     <>
@@ -208,6 +242,18 @@ const handleAddBlog = async (blogObject) => {
     )
   }
 />
+
+<Route
+  path="/users"
+  element={<Users users={users} />}
+/>
+
+<Route
+  path="/users/:id"
+  element={<User user={selectedUser} />}
+/>
+
+
         <Route
           path="/"
           element={
@@ -254,6 +300,31 @@ const handleAddBlog = async (blogObject) => {
 
         <div>
           added by {selectedBlog.user?.name}
+          <h3>comments</h3>
+
+<ul>
+  {selectedBlog.comments?.map((c, index) => (
+    <li key={index}>{c}</li>
+  ))}
+</ul>
+
+<form
+  onSubmit={(event) => {
+    event.preventDefault()
+    handleComment(selectedBlog)
+  }}
+>
+  <input
+    value={comment}
+    onChange={({ target }) =>
+      setComment(target.value)
+    }
+  />
+
+  <button type="submit">
+    add comment
+  </button>
+</form>
         </div>
 
         {user &&

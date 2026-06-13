@@ -41,13 +41,14 @@ const create = async (request, response) => {
     })
   }
 
-  const blog = new Blog({
-    title,
-    author,
-    url,
-    likes: likes || 0,
-    user: user._id,
-  })
+const blog = new Blog({
+  title,
+  author,
+  url,
+  likes: likes || 0,
+  comments: [],
+  user: user._id,
+})
 
   const savedBlog = await blog.save()
 
@@ -93,6 +94,24 @@ const update = async (request, response) => {
   response.json(blog)
 }
 
+const addComment = async (request, response) => {
+  const blog = await Blog.findById(request.params.id)
+
+  if (!blog) {
+    return response.status(404).json({
+      error: 'blog not found',
+    })
+  }
+
+  const { comment } = request.body
+
+  blog.comments = blog.comments.concat(comment)
+
+  const savedBlog = await blog.save()
+
+  response.status(201).json(savedBlog)
+}
+
 const remove = async (request, response) => {
   const blog = await Blog.findById(request.params.id)
 
@@ -126,5 +145,6 @@ module.exports = {
   getById,
   create,
   update,
+  addComment,
   remove,
 }
