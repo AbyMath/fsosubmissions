@@ -125,15 +125,15 @@ const handleAddBlog = async (blogObject) => {
       updated
     )
 
-    setBlogs(prev =>
-      sortBlogs(
-        prev.map(b =>
-          b.id === blog.id
-            ? { ...returned, user: blog.user }
-            : b
-        )
-      )
+setBlogs(prev =>
+  sortBlogs(
+    prev.map(b =>
+      b.id === blog.id
+        ? { ...returned, user: blog.user }
+        : b
     )
+  )
+)
   }
 
   const handleComment = async (blog) => {

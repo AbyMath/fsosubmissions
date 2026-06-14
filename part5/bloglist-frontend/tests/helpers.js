@@ -15,7 +15,7 @@ export const createUser = async () => {
 }
 
 export const loginWith = async (page) => {
-  await page.goto('http://localhost:5173')
+  await page.goto('http://localhost:5173/login')
 
   await page.locator('input[type="text"]').fill('testuser')
   await page.locator('input[type="password"]').fill('password')

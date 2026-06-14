@@ -6,7 +6,11 @@ test.describe('Blog app', () => {
   })
 
   test('login form is shown', async ({ page }) => {
-    await expect(page.getByText('log in to application')).toBeVisible()
+  await page.goto('http://localhost:5173/login')
+
+  await expect(
+    page.getByText('log in to application')
+  ).toBeVisible()
     
     const usernameInputs = page.locator('input[type="text"]')
     await expect(usernameInputs.first()).toBeVisible()
@@ -28,6 +32,8 @@ test.describe('Blog app', () => {
           password: 'password'
         }
       })
+    
+      await page.goto('http://localhost:5173/login')
 
       await page.locator('input[type="text"]').fill('testuser')
       await page.locator('input[type="password"]').fill('password')
@@ -47,6 +53,8 @@ test.describe('Blog app', () => {
         }
       })
 
+      await page.goto('http://localhost:5173/login')
+      
       await page.locator('input[type="text"]').fill('testuser')
       await page.locator('input[type="password"]').fill('wrongpassword')
       await page.getByRole('button', { name: 'login' }).click()

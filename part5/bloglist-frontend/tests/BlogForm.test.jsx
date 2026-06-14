@@ -19,6 +19,8 @@ describe('BlogForm component', () => {
 
     await user.click(submitButton)
 
+    expect(mockOnAddBlog).toHaveBeenCalledTimes(1)
+
     expect(mockOnAddBlog).toHaveBeenCalledWith({
       title: 'Test Title',
       author: 'Test Author',
