@@ -39,14 +39,12 @@ test.describe('Blog app', () => {
 
       await page.getByRole('button', { name: 'like' }).click()
 
-      await expect(
-        page.getByText(/likes 1/i)
-      ).toBeVisible()
+      await expect(page.getByText(/Likes:\s*1/i)).toBeVisible()
 
       await page.getByRole('button', { name: 'like' }).click()
 
       await expect(
-        page.getByText(/likes 2/i)
+        page.getByText(/Likes:\s*2/i)
       ).toBeVisible()
     })
 
@@ -127,17 +125,17 @@ test.describe('Blog app', () => {
   await page.getByRole('link', { name: /High likes Author/i }).click()
 
   await page.getByRole('button', { name: 'like' }).click()
-  await expect(page.getByText(/likes 1/i)).toBeVisible()
+  await expect(page.getByText(/Likes:\s*1/i)).toBeVisible()
 
   await page.getByRole('button', { name: 'like' }).click()
-  await expect(page.getByText(/likes 2/i)).toBeVisible()
+  await expect(page.getByText(/Likes:\s*2/i)).toBeVisible()
 
   await page.goto('http://localhost:5173/')
 
   await page.getByRole('link', { name: /Medium likes Author/i }).click()
 
   await page.getByRole('button', { name: 'like' }).click()
-await expect(page.getByText(/likes 1/i)).toBeVisible()
+await expect(page.getByText(/Likes:\s*1/i)).toBeVisible()
 
 await page.goto('http://localhost:5173/')
 

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Routes, Route, Link, Navigate, useNavigate, useMatch } from 'react-router-dom'
+import { AppBar, Toolbar, Button, Typography, Box, Card, CardContent, TextField, List, ListItem } from '@mui/material'
 
 import Users from './components/Users'
 import User from './components/User'
@@ -181,36 +182,62 @@ setBlogs(prev =>
     <div>
       <Notification notification={notification} />
 
-      <div style={{ marginBottom: '20px' }}>
-  
-  <Link to="/">blogs</Link>
-  {' | '}
-  <Link to="/users">users</Link>
+     <AppBar position="static" sx={{ mb: 3 }}>
+  <Toolbar>
 
-  {user && (
-    <>
-      {' | '}
-      <Link to="/create">create</Link>
-    </>
-  )}
+    <Button
+      color="inherit"
+      component={Link}
+      to="/"
+    >
+      Blogs
+    </Button>
 
-  {!user && (
-    <>
-      {' | '}
-      <Link to="/login">login</Link>
-    </>
-  )}
+    <Button
+      color="inherit"
+      component={Link}
+      to="/users"
+    >
+      Users
+    </Button>
 
-  {user && (
-    <>
-      {' | '}
-      {user.name} logged in
-      <button onClick={handleLogout}>
-        logout
-      </button>
-    </>
-  )}
-</div>
+    {user && (
+      <Button
+        color="inherit"
+        component={Link}
+        to="/create"
+      >
+        Create
+      </Button>
+    )}
+
+    <Box sx={{ flexGrow: 1 }} />
+
+    {!user ? (
+      <Button
+        color="inherit"
+        component={Link}
+        to="/login"
+      >
+        Login
+      </Button>
+    ) : (
+      <>
+        <Typography sx={{ mr: 2 }}>
+          {user.name} logged in
+        </Typography>
+
+        <Button
+          color="inherit"
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
+      </>
+    )}
+
+  </Toolbar>
+</AppBar>
 
       <Routes>
         <Route
@@ -269,77 +296,107 @@ setBlogs(prev =>
             </div>
           }
         />
-       <Route
+<Route
   path="/blogs/:id"
   element={
     selectedBlog ? (
-      <div>
-        <h2>
-          {selectedBlog.title} {selectedBlog.author}
-        </h2>
+      <Card sx={{ maxWidth: 700, mx: 'auto', mt: 4 }}>
+        <CardContent>
 
-        <a
-          href={selectedBlog.url}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {selectedBlog.url}
-        </a>
+          <Typography variant="h4" gutterBottom>
+            {selectedBlog.title}
+          </Typography>
 
-        <div>
-          likes {selectedBlog.likes}
+          <Typography variant="subtitle1" color="text.secondary">
+            by {selectedBlog.author}
+          </Typography>
 
-          {user && (
-            <button
-              onClick={() => handleLike(selectedBlog)}
+          <Typography sx={{ mt: 2 }}>
+            <a
+              href={selectedBlog.url}
+              target="_blank"
+              rel="noreferrer"
             >
-              like
-            </button>
-          )}
-        </div>
+              {selectedBlog.url}
+            </a>
+          </Typography>
 
-        <div>
-          added by {selectedBlog.user?.name}
-          <h3>comments</h3>
+          <Box sx={{ mt: 3 }}>
+            <Typography>
+              Likes: {selectedBlog.likes}
+            </Typography>
 
-<ul>
-  {selectedBlog.comments?.map((c, index) => (
-    <li key={index}>{c}</li>
-  ))}
-</ul>
+            {user && (
+              <Button
+                variant="contained"
+                sx={{ mt: 1 }}
+                onClick={() => handleLike(selectedBlog)}
+              >
+                Like
+              </Button>
+            )}
+          </Box>
 
-<form
-  onSubmit={(event) => {
-    event.preventDefault()
-    handleComment(selectedBlog)
-  }}
->
-  <input
-    value={comment}
-    onChange={({ target }) =>
-      setComment(target.value)
-    }
-  />
+          <Typography sx={{ mt: 3 }}>
+            Added by {selectedBlog.user?.name}
+          </Typography>
 
-  <button type="submit">
-    add comment
-  </button>
-</form>
-        </div>
+          <Typography variant="h6" sx={{ mt: 4 }}>
+            Comments
+          </Typography>
 
-        {user &&
-          ((typeof selectedBlog.user === 'object'
-            ? selectedBlog.user.username === user.username
-            : selectedBlog.user === user.id)) && (
-            <button
-              onClick={() => handleDeleteBlog(selectedBlog)}
+          <List>
+            {selectedBlog.comments?.map((c, index) => (
+              <ListItem key={index}>
+                {c}
+              </ListItem>
+            ))}
+          </List>
+
+          <Box
+            component="form"
+            sx={{ mt: 2 }}
+            onSubmit={(event) => {
+              event.preventDefault()
+              handleComment(selectedBlog)
+            }}
+          >
+            <TextField
+              fullWidth
+              label="Add comment"
+              value={comment}
+              onChange={({ target }) =>
+                setComment(target.value)
+              }
+            />
+
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ mt: 2 }}
             >
-              remove
-            </button>
-          )}
-      </div>
+              Add Comment
+            </Button>
+          </Box>
+
+          {user &&
+            ((typeof selectedBlog.user === 'object'
+              ? selectedBlog.user.username === user.username
+              : selectedBlog.user === user.id)) && (
+              <Button
+                color="error"
+                variant="outlined"
+                sx={{ mt: 3 }}
+                onClick={() => handleDeleteBlog(selectedBlog)}
+              >
+                Remove Blog
+              </Button>
+            )}
+
+        </CardContent>
+      </Card>
     ) : (
-      <div>Blog not found</div>
+      <Typography>Blog not found</Typography>
     )
   }
 />

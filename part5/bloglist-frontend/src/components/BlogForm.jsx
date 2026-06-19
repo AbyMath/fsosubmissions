@@ -1,59 +1,80 @@
 import { useState } from 'react'
+import {
+  Typography,
+  TextField,
+  Button,
+  Box,
+  Paper
+} from '@mui/material'
 
 const BlogForm = ({ onAddBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault()
+
     if (!title.trim() || !url.trim()) {
-  return
-}
+      return
+    }
+
     onAddBlog({
       title,
       author,
       url,
     })
+
     setTitle('')
     setAuthor('')
     setUrl('')
   }
 
   return (
-    <div>
-      <h3>create new blog</h3>
-      <form onSubmit={handleSubmit}>
-        <div>
-          title
-          <input
-            type="text"
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-            style={{ marginLeft: '10px' }}
-          />
-        </div>
-        <div style={{ marginTop: '10px' }}>
-          author
-          <input
-            type="text"
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-            style={{ marginLeft: '10px' }}
-          />
-        </div>
-        <div style={{ marginTop: '10px' }}>
-          url
-          <input
-            type="text"
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
-            style={{ marginLeft: '10px' }}
-          />
-        </div>
-        <button type="submit" style={{ marginTop: '10px' }}>create</button>
-      </form>
-    </div>
+    <Paper sx={{ p: 3, maxWidth: 600 }}>
+      <Typography variant="h5" gutterBottom>
+        Create New Blog
+      </Typography>
+
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2
+        }}
+      >
+        <TextField
+          label="Title"
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
+          fullWidth
+        />
+
+        <TextField
+          label="Author"
+          value={author}
+          onChange={({ target }) => setAuthor(target.value)}
+          fullWidth
+        />
+
+        <TextField
+          label="URL"
+          value={url}
+          onChange={({ target }) => setUrl(target.value)}
+          fullWidth
+        />
+
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{ width: 'fit-content' }}
+        >
+          Create
+        </Button>
+      </Box>
+    </Paper>
   )
 }
 

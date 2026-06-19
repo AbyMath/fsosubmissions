@@ -1,3 +1,10 @@
+import {
+  TextField,
+  Button,
+  Paper,
+  Typography
+} from '@mui/material'
+
 const LoginForm = ({
   username,
   password,
@@ -6,31 +13,52 @@ const LoginForm = ({
   handleLogin
 }) => {
   return (
-    <div>
-      <h2>log in to application</h2>
+    <Paper
+      elevation={3}
+      sx={{
+        maxWidth: 400,
+        p: 3,
+        mt: 3
+      }}
+    >
+      <Typography
+        variant="h5"
+        gutterBottom
+      >
+        Log in to application
+      </Typography>
 
       <form onSubmit={handleLogin}>
-        <div>
-          <input
-            type="text"
-            placeholder="username"
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
+        <TextField
+          label="Username"
+          fullWidth
+          margin="normal"
+          value={username}
+          onChange={({ target }) =>
+            setUsername(target.value)
+          }
+        />
 
-        <div>
-          <input
-            type="password"
-            placeholder="password"
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
+        <TextField
+          label="Password"
+          type="password"
+          fullWidth
+          margin="normal"
+          value={password}
+          onChange={({ target }) =>
+            setPassword(target.value)
+          }
+        />
 
-        <button type="submit">login</button>
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{ mt: 2 }}
+        >
+          Login
+        </Button>
       </form>
-    </div>
+    </Paper>
   )
 }
 

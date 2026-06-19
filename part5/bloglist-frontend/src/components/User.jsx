@@ -1,22 +1,34 @@
+import {
+  Typography,
+  Paper,
+  List,
+  ListItem,
+  ListItemText
+} from '@mui/material'
+
 const User = ({ user }) => {
   if (!user) {
     return null
   }
 
   return (
-    <div>
-      <h2>{user.name}</h2>
+    <Paper sx={{ p: 3, maxWidth: 700, mx: 'auto', mt: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        {user.name}
+      </Typography>
 
-      <h3>added blogs</h3>
+      <Typography variant="h6" sx={{ mt: 2, mb: 2 }}>
+        Added blogs
+      </Typography>
 
-      <ul>
+      <List>
         {user.blogs.map(blog => (
-          <li key={blog.id}>
-            {blog.title}
-          </li>
+          <ListItem key={blog.id} divider>
+            <ListItemText primary={blog.title} />
+          </ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Paper>
   )
 }
 

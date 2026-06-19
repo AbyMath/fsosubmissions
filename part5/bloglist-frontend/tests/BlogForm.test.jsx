@@ -11,7 +11,7 @@ describe('BlogForm component', () => {
     render(<BlogForm onAddBlog={mockOnAddBlog} />)
 
     const inputs = screen.getAllByRole('textbox')
-    const submitButton = screen.getByRole('button', { name: 'create' })
+    const submitButton = screen.getByRole('button', { name: /create/i })
 
     await user.type(inputs[0], 'Test Title')
     await user.type(inputs[1], 'Test Author')
@@ -35,7 +35,7 @@ describe('BlogForm component', () => {
     render(<BlogForm onAddBlog={mockOnAddBlog} />)
 
     const inputs = screen.getAllByRole('textbox')
-    const submitButton = screen.getByRole('button', { name: 'create' })
+    const submitButton = screen.getByRole('button', { name: /create/i })
 
     await user.type(inputs[0], 'Test Title')
     await user.type(inputs[1], 'Test Author')
