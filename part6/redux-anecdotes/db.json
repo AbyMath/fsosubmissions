@@ -1,0 +1,20 @@
+{
+  "anecdotes": [
+    {
+      "content": "If it hurts, do it more often.",
+      "id": "1",
+      "votes": 2
+    },
+    {
+      "content": "Adding manpower to a late software project makes it later!",
+      "id": "2",
+      "votes": 1
+    },
+    {
+      "content": "I think therefore I am",
+      "votes": 3,
+      "id": "luKrghl2H6U"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
